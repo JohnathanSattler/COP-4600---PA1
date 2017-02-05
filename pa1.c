@@ -1,22 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "types.h"
+#include "queue.h"
+#include "fcfs.h"
+#include "sjf.h"
 
-typedef struct process {
-	char name[100];
-	int arrival;
-	int burst;
-	struct process * next;
-} process;
-
-void readFile(FILE * ifp);
+process * readFile(FILE * ifp, process * head);
 int useStrToInt(char * use);
 void printValues();
-void enqueue(char * name, int arrival, int burst);
-process * dequeue();
-void printQueue();
 
-process * head;
 int processcount;
 int runfor;
 int use;
@@ -27,6 +20,7 @@ int main() {
 	char * inputFile  = "processes.in";
 	char * outputFile = "processes.out";
 	FILE * ifp, * ofp;
+	process * head;
 
 	head = NULL;
 
@@ -37,21 +31,36 @@ int main() {
 
 	ifp = fopen(inputFile, "r");
 
-	readFile(ifp);
+	head = readFile(ifp, head);
 
 	fclose(ifp);
 
 	printValues();
-
 	printf("\n");
-	printQueue();
+
+	switch (use) {
+		case fcfs:
+			startFcfs(head, runfor);
+			break;
+
+		case sjf:
+			startSjf(head, runfor);
+			break;
+
+		case rr:
+			break;
+
+		default:
+			printf("Error: Unknown use type\n");
+			break;
+	}
 
 	free(head);
 
    return 0; 
 }
 
-void readFile(FILE * ifp) {
+process * readFile(FILE * ifp, process * head) {
 
 	char * strIn, * nameIn;
 	char charIn;
@@ -63,16 +72,13 @@ void readFile(FILE * ifp) {
 
 	if (ifp == NULL) {
 		printf("Error: File not found\n");
-		return;
+		return NULL;
 	}
 
 	strIn = (char *) malloc(sizeof(char) * 100);
 	nameIn = (char *) malloc(sizeof(char) * 100);
 
 	while (fscanf(ifp, "%s", strIn) != EOF) {
-
-		//printf("%s\n", strIn);
-
 		if (strIn[0] == '#') {
 			while (fscanf(ifp, "%c", &charIn) != EOF)
 				if (charIn == '\n')
@@ -98,13 +104,13 @@ void readFile(FILE * ifp) {
 			fscanf(ifp, "%s", strIn);
 			fscanf(ifp, "%d", &burstIn);
 
-			enqueue(nameIn, arrivalIn, burstIn);
+			head = enqueue(head, nameIn, arrivalIn, burstIn);
 			continue;
 		}
 
 		if (i >= 4) {
 			printf("Error: Too many arguments\n");
-			return;
+			return NULL;
 		}
 
 		if (strcmp(strIn, "use") == 0) {
@@ -123,17 +129,17 @@ void readFile(FILE * ifp) {
 	free(strIn);
 	free(nameIn);
 
-	return;
+	return head;
 }
 
 int useStrToInt(char * use) {
 
 	if (strcmp(use, "fcfs") == 0) {
-		return 1;
+		return fcfs;
 	} else if (strcmp(use, "sjf") == 0) {
-		return 2;
+		return sjf;
 	} else if (strcmp(use, "rr") == 0) {
-		return 3;
+		return rr;
 	}
 
 	printf("Error: Unknown use type\n");
@@ -156,69 +162,12 @@ void printValues() {
 
 		case 3:
 			printf("Round-Robin\n");
+			printf("Quantum %d\n", quantum);
 			break;
 
 		default:
 			printf("Unknown\n");
 			break;
-	}
-
-	printf("Quantum %d\n", quantum);
-
-	return;
-}
-
-void enqueue(char * name, int arrival, int burst) {
-
-	process * temp, * loop;
-
-	temp = (process *) malloc(sizeof(process));
-	loop = head;
-
-	strcpy(temp -> name, name);
-	temp -> arrival = arrival;
-	temp -> burst = burst;
-	temp -> next = NULL;
-
-	if (head == NULL) {
-		head = temp;
-		return;
-	}
-
-	while (loop -> next != NULL)
-		loop = loop -> next;
-
-	loop -> next = temp;
-
-	return;
-}
-
-process * dequeue() {
-
-	process * temp;
-
-	if (head == NULL)
-		return head;
-
-	temp = head;
-
-	head = head -> next;
-
-	return temp;
-}
-
-void printQueue() {
-
-	process * temp;
-
-	temp = head;
-
-	if (temp == NULL)
-		return;
-
-	while (temp != NULL) {
-		printf("Name: %s, Arrival: %d, Burst: %d\n", temp -> name, temp -> arrival, temp -> burst);
-		temp = temp -> next;
 	}
 
 	return;
