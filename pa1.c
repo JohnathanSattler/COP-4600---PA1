@@ -12,7 +12,11 @@ typedef struct process {
 void readFile(FILE * ifp);
 int useStrToInt(char * use);
 void printValues();
+void enqueue(char * name, int arrival, int burst);
+process * dequeue();
+void printQueue();
 
+process * head;
 int processcount;
 int runfor;
 int use;
@@ -23,6 +27,8 @@ int main() {
 	char * inputFile  = "processes.in";
 	char * outputFile = "processes.out";
 	FILE * ifp, * ofp;
+
+	head = NULL;
 
 	processcount = 0;
 	runfor = 0;
@@ -37,14 +43,19 @@ int main() {
 
 	printValues();
 
+	printf("\n");
+	printQueue();
+
+	free(head);
+
    return 0; 
 }
 
 void readFile(FILE * ifp) {
 
-	char * strIn;
+	char * strIn, * nameIn;
 	char charIn;
-	int intIn, i = 0;
+	int arrivalIn, burstIn, i = 0;
 
 	int input[4];
 
@@ -56,6 +67,7 @@ void readFile(FILE * ifp) {
 	}
 
 	strIn = (char *) malloc(sizeof(char) * 100);
+	nameIn = (char *) malloc(sizeof(char) * 100);
 
 	while (fscanf(ifp, "%s", strIn) != EOF) {
 
@@ -76,15 +88,17 @@ void readFile(FILE * ifp) {
 		if (strcmp(strIn, "process") == 0) {
 			// name
 			fscanf(ifp, "%s", strIn);
-			fscanf(ifp, "%s", strIn);
+			fscanf(ifp, "%s", nameIn);
 
 			// arrival
 			fscanf(ifp, "%s", strIn);
-			fscanf(ifp, "%d", &intIn);
+			fscanf(ifp, "%d", &arrivalIn);
 
 			// burst
 			fscanf(ifp, "%s", strIn);
-			fscanf(ifp, "%d", &intIn);
+			fscanf(ifp, "%d", &burstIn);
+
+			enqueue(nameIn, arrivalIn, burstIn);
 			continue;
 		}
 
@@ -106,6 +120,9 @@ void readFile(FILE * ifp) {
 	use = input[2];
 	quantum = input[3];
 
+	free(strIn);
+	free(nameIn);
+
 	return;
 }
 
@@ -125,12 +142,84 @@ int useStrToInt(char * use) {
 
 void printValues() {
 
-	printf("==================================================\n");
-	printf("\tprocesscount\t: %d\n", processcount);
-	printf("\trunfor\t\t: %d\n", runfor);
-	printf("\tuse\t\t: %d (fcfs = 1, sjf = 2, rr = 3)\n", use);
-	printf("\tquantum\t\t: %d\n", quantum);
-	printf("==================================================\n");
+	printf("%d processes\n", processcount);
+
+	printf("Using ");
+	switch (use) {
+		case 1: // fcfs
+			printf("First-Come, First-Served\n");
+			break;
+
+		case 2:
+			printf("Shortest Job First\n");
+			break;
+
+		case 3:
+			printf("Round-Robin\n");
+			break;
+
+		default:
+			printf("Unknown\n");
+			break;
+	}
+
+	printf("Quantum %d\n", quantum);
+
+	return;
+}
+
+void enqueue(char * name, int arrival, int burst) {
+
+	process * temp, * loop;
+
+	temp = (process *) malloc(sizeof(process));
+	loop = head;
+
+	strcpy(temp -> name, name);
+	temp -> arrival = arrival;
+	temp -> burst = burst;
+	temp -> next = NULL;
+
+	if (head == NULL) {
+		head = temp;
+		return;
+	}
+
+	while (loop -> next != NULL)
+		loop = loop -> next;
+
+	loop -> next = temp;
+
+	return;
+}
+
+process * dequeue() {
+
+	process * temp;
+
+	if (head == NULL)
+		return head;
+
+	temp = head;
+
+	head = head -> next;
+
+	return temp;
+}
+
+void printQueue() {
+
+	process * temp;
+
+	temp = head;
+
+	if (temp == NULL)
+		return;
+
+	while (temp != NULL) {
+		printf("Name: %s, Arrival: %d, Burst: %d\n", temp -> name, temp -> arrival, temp -> burst);
+		temp = temp -> next;
+	}
 
 	return;
 }
