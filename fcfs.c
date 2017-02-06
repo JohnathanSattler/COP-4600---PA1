@@ -9,7 +9,7 @@ process * readyQueue;
 int runTime;
 int currentTime;
 
-void startFcfs(process * head, int runFor) {
+void startFcfs(process * head, int runFor, FILE * ofp) {
 
 	process * temp;
 
@@ -24,12 +24,12 @@ void startFcfs(process * head, int runFor) {
 
 	printQueue(readyQueue);
 
-	runFcfs();
+	runFcfs(ofp);
 
 	return;
 }
 
-void runFcfs() {
+void runFcfs(FILE * ofp) {
 
 	process * temp;
 
@@ -37,27 +37,27 @@ void runFcfs() {
 
 	while (currentTime <= runTime) {
 		while (temp != NULL && temp -> arrival == currentTime) {
-			printf("Time %d: %s arrived\n", currentTime, temp -> name);
+			fprintf(ofp, "Time %d: %s arrived\n", currentTime, temp -> name);
 
 			if (readyQueue == NULL)
-				printf("Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
+				fprintf(ofp, "Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
 
 			readyQueue = enqueue(readyQueue, temp -> name, temp -> arrival, temp -> burst, temp -> wait, temp -> turnaround);
 			temp = dequeue(temp);
 		}
 
 		if (readyQueue == NULL) {
-			printf("Time %d: IDLE\n", currentTime);
+			fprintf(ofp, "Time %d: IDLE\n", currentTime);
 		} else {
 			if (readyQueue -> burst == 0) {
-				printf("Time %d: %s finished\n", currentTime, readyQueue -> name);
+				fprintf(ofp, "Time %d: %s finished\n", currentTime, readyQueue -> name);
 
 				endQueue = edit(endQueue, readyQueue, readyQueue -> wait, currentTime - readyQueue -> arrival);
 
 				readyQueue = dequeue(readyQueue);
 
 				if (readyQueue != NULL) {
-					printf("Time %d: %s selected (burst %d)\n", currentTime, readyQueue -> name, readyQueue -> burst);
+					fprintf(ofp, "Time %d: %s selected (burst %d)\n", currentTime, readyQueue -> name, readyQueue -> burst);
 					readyQueue = edit(readyQueue, readyQueue, currentTime - readyQueue -> arrival, currentTime - readyQueue -> arrival);
 				}
 			}
@@ -69,9 +69,9 @@ void runFcfs() {
 		currentTime++;
 	}
 
-	printf("Finished at time %d\n\n", currentTime - 1);
+	fprintf(ofp, "Finished at time %d\n\n", currentTime - 1);
 
-	printData(endQueue);
+	printData(endQueue, ofp);
 
 	return;
 }

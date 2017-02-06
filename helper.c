@@ -46,7 +46,7 @@ process * copyQueue(process * head) {
 	return head;
 }
 
-void printData(process * head) {
+void printData(process * head, FILE * ofp) {
 
 	process * temp;
 
@@ -56,12 +56,12 @@ void printData(process * head) {
 		return;
 
 	while (temp != NULL) {
-		printf("%s wait %d turnaround %d", temp -> name, temp -> wait, temp -> turnaround);
+		fprintf(ofp, "%s wait %d turnaround %d", temp -> name, temp -> wait, temp -> turnaround);
 
 		if (temp -> turnaround < 0)
-			printf(" (process did not finish)");
+			fprintf(ofp, " (process did not finish)");
 
-		printf("\n");
+		fprintf(ofp, "\n");
 
 		temp = temp -> next;
 	}

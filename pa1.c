@@ -7,9 +7,9 @@
 #include "sjf.h"
 #include "rr.h"
 
-process * readFile(FILE * ifp, process * head);
+process * readFile(FILE * ifp, process * head, FILE * ofp);
 int useStrToInt(char * use);
-void printValues();
+void printValues(FILE * ofp);
 
 int processcount;
 int runfor;
@@ -31,38 +31,41 @@ int main() {
 	quantum = 0;
 
 	ifp = fopen(inputFile, "r");
+	ofp = fopen(outputFile, "w");
 
-	head = readFile(ifp, head);
+	head = readFile(ifp, head, ofp);
 
 	fclose(ifp);
 
-	printValues();
-	printf("\n");
+	printValues(ofp);
+	fprintf(ofp, "\n");
 
 	switch (use) {
 		case fcfs:
-			startFcfs(head, runfor);
+			startFcfs(head, runfor, ofp);
 			break;
 
 		case sjf:
-			startSjf(head, runfor);
+			startSjf(head, runfor, ofp);
 			break;
 
 		case rr:
-			startRr(head, runfor, quantum);
+			startRr(head, runfor, quantum, ofp);
 			break;
 
 		default:
-			printf("Error: Unknown use type\n");
+			fprintf(ofp, "Error: Unknown use type\n");
 			break;
 	}
+
+	fclose(ofp);
 
 	free(head);
 
    return 0; 
 }
 
-process * readFile(FILE * ifp, process * head) {
+process * readFile(FILE * ifp, process * head, FILE * ofp) {
 
 	char * strIn, * nameIn;
 	char charIn;
@@ -73,7 +76,7 @@ process * readFile(FILE * ifp, process * head) {
 	input[3] = -1;
 
 	if (ifp == NULL) {
-		printf("Error: File not found\n");
+		fprintf(ofp, "Error: File not found\n");
 		return NULL;
 	}
 
@@ -111,7 +114,7 @@ process * readFile(FILE * ifp, process * head) {
 		}
 
 		if (i >= 4) {
-			printf("Error: Too many arguments\n");
+			fprintf(ofp, "Error: Too many arguments\n");
 			return NULL;
 		}
 
@@ -148,27 +151,27 @@ int useStrToInt(char * use) {
 	return 0;
 }
 
-void printValues() {
+void printValues(FILE * ofp) {
 
-	printf("%d processes\n", processcount);
+	fprintf(ofp, "%d processes\n", processcount);
 
-	printf("Using ");
+	fprintf(ofp, "Using ");
 	switch (use) {
 		case 1: // fcfs
-			printf("First Come First Served\n");
+			fprintf(ofp, "First Come First Served\n");
 			break;
 
 		case 2:
-			printf("Shortest Job First (Pre)\n");
+			fprintf(ofp, "Shortest Job First (Pre)\n");
 			break;
 
 		case 3:
-			printf("Round-Robin\n");
-			printf("Quantum %d\n", quantum);
+			fprintf(ofp, "Round-Robin\n");
+			fprintf(ofp, "Quantum %d\n", quantum);
 			break;
 
 		default:
-			printf("Unknown\n");
+			fprintf(ofp, "Unknown\n");
 			break;
 	}
 

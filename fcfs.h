@@ -1,2 +1,2 @@
-void startFcfs(process * head, int runFor);
-void runFcfs();
+void startFcfs(process * head, int runFor, FILE * ofp);
+void runFcfs(FILE * ofp);

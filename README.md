@@ -5,3 +5,5 @@ Compile: make
 Run: ./pa1
 
 Reads processes.in as input. 
+
+Outputs to processes.out.

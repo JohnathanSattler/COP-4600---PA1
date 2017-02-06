@@ -10,7 +10,7 @@ process * readyQueue;
 int runTime;
 int currentTime;
 
-void startSjf(process * head, int runFor) {
+void startSjf(process * head, int runFor, FILE * ofp) {
 
 	process * temp;
 
@@ -25,12 +25,12 @@ void startSjf(process * head, int runFor) {
 
 	printQueue(readyQueue);
 
-	runSjf();
+	runSjf(ofp);
 
 	return;
 }
 
-void runSjf() {
+void runSjf(FILE * ofp) {
 
 	process * temp, * node;
 	int i;
@@ -39,10 +39,10 @@ void runSjf() {
 
 	while (currentTime <= runTime) {
 		while (temp != NULL && temp -> arrival == currentTime) {
-			printf("Time %d: %s arrived\n", currentTime, temp -> name);
+			fprintf(ofp, "Time %d: %s arrived\n", currentTime, temp -> name);
 
 			if (readyQueue == NULL)
-				printf("Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
+				fprintf(ofp, "Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
 
 			readyQueue = enqueue(readyQueue, temp -> name, temp -> arrival, temp -> burst, temp -> wait, temp -> turnaround);
 
@@ -52,7 +52,7 @@ void runSjf() {
 			if (i != 0) {
 				readyQueue = removeNode(readyQueue, node);
 				readyQueue = insertAt(readyQueue, node, 0);
-				printf("Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
+				fprintf(ofp, "Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
 			}
 
 			temp = dequeue(temp);
@@ -60,7 +60,7 @@ void runSjf() {
 
 		if (readyQueue != NULL) {
 			if (readyQueue -> burst == 0) {
-				printf("Time %d: %s finished\n", currentTime, readyQueue -> name);
+				fprintf(ofp, "Time %d: %s finished\n", currentTime, readyQueue -> name);
 
 				endQueue = edit(endQueue, readyQueue, currentTime - readyQueue -> timeRun - readyQueue -> arrival, currentTime - readyQueue -> arrival);
 
@@ -75,7 +75,7 @@ void runSjf() {
 						readyQueue = insertAt(readyQueue, node, 0);
 					}
 
-					printf("Time %d: %s selected (burst %d)\n", currentTime, readyQueue -> name, readyQueue -> burst);
+					fprintf(ofp, "Time %d: %s selected (burst %d)\n", currentTime, readyQueue -> name, readyQueue -> burst);
 					readyQueue = edit(readyQueue, readyQueue, currentTime - readyQueue -> arrival, currentTime - readyQueue -> arrival);
 				}
 			}
@@ -87,14 +87,14 @@ void runSjf() {
 		}
 
 		if (readyQueue == NULL && currentTime < runTime)
-			printf("Time %d: IDLE\n", currentTime);
+			fprintf(ofp, "Time %d: IDLE\n", currentTime);
 
 		currentTime++;
 	}
 
-	printf("Finished at time %d\n\n", currentTime - 1);
+	fprintf(ofp, "Finished at time %d\n\n", currentTime - 1);
 
-	printData(endQueue);
+	printData(endQueue, ofp);
 
 	return;
 }

@@ -5,7 +5,7 @@
 
 process * selectNext(process * head);
 process * copyQueue(process * head);
-void printData(process * head);
+void printData(process * head, FILE * ofp);
 process * lowestBurst(process * head);
 
 process * processQueue;
