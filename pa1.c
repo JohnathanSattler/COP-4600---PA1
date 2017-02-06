@@ -5,6 +5,7 @@
 #include "queue.h"
 #include "fcfs.h"
 #include "sjf.h"
+#include "rr.h"
 
 process * readFile(FILE * ifp, process * head);
 int useStrToInt(char * use);
@@ -48,6 +49,7 @@ int main() {
 			break;
 
 		case rr:
+			startRr(head, runfor, quantum);
 			break;
 
 		default:
@@ -104,7 +106,7 @@ process * readFile(FILE * ifp, process * head) {
 			fscanf(ifp, "%s", strIn);
 			fscanf(ifp, "%d", &burstIn);
 
-			head = enqueue(head, nameIn, arrivalIn, burstIn);
+			head = enqueue(head, nameIn, arrivalIn, burstIn, 0, -1);
 			continue;
 		}
 

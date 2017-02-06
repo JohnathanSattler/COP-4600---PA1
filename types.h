@@ -11,7 +11,6 @@ typedef struct process {
 	char name[100];
 	int arrival;
 	int burst;
-	int end;
 	int wait;
 	int turnaround;
 	struct process * next;

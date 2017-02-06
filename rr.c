@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "types.h"
-#include "fcfs.h"
+#include "rr.h"
 #include "queue.h"
 #include "helper.h"
 
@@ -9,7 +9,7 @@ process * readyQueue;
 int runTime;
 int currentTime;
 
-void startFcfs(process * head, int runFor) {
+void startRr(process * head, int runFor, int quantum) {
 
 	process * temp;
 
@@ -24,14 +24,15 @@ void startFcfs(process * head, int runFor) {
 
 	printQueue(readyQueue);
 
-	runFcfs();
+	runRr(quantum);
 
 	return;
 }
 
-void runFcfs() {
+void runRr(int quantum) {
 
 	process * temp;
+	int currentQuantum = 0;
 
 	temp = processQueue;
 
@@ -42,14 +43,25 @@ void runFcfs() {
 			if (readyQueue == NULL)
 				printf("Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
 
-			readyQueue = enqueue(readyQueue, temp -> name, temp -> arrival, temp -> burst, temp -> wait, temp -> turnaround);
+			readyQueue = enqueue(readyQueue, temp -> name, temp -> arrival, temp -> burst, temp -> wait + currentQuantum, temp -> turnaround);
+
 			temp = dequeue(temp);
 		}
 
-		if (readyQueue == NULL) {
-			printf("Time %d: Idle\n", currentTime);
-		} else {
-			if (readyQueue -> burst <= 1) {
+		if (readyQueue != NULL) {
+			if (currentQuantum == quantum && readyQueue -> burst > 0) {
+				if (readyQueue -> next != NULL && readyQueue -> next -> arrival + readyQueue -> next -> wait != currentTime)
+					readyQueue -> next -> wait += currentQuantum;
+
+				readyQueue = enqueue(readyQueue, readyQueue -> name, readyQueue -> arrival, readyQueue -> burst, readyQueue -> wait, readyQueue -> turnaround);
+				readyQueue = dequeue(readyQueue);
+
+				printf("Time %d: %s selected (burst %d)\n", currentTime, readyQueue -> name, readyQueue -> burst);
+
+				currentQuantum = 0;
+			}
+			
+			if (readyQueue -> burst == 0) {
 				printf("Time %d: %s finished\n", currentTime, readyQueue -> name);
 
 				endQueue = edit(endQueue, readyQueue, readyQueue -> wait, currentTime - readyQueue -> arrival);
@@ -58,14 +70,19 @@ void runFcfs() {
 
 				if (readyQueue != NULL) {
 					printf("Time %d: %s selected (burst %d)\n", currentTime, readyQueue -> name, readyQueue -> burst);
-					readyQueue = edit(readyQueue, readyQueue, currentTime - readyQueue -> arrival, currentTime - readyQueue -> arrival);
+					readyQueue = edit(readyQueue, readyQueue, readyQueue -> wait + currentQuantum, currentTime - readyQueue -> arrival);
 				}
-			} else if (readyQueue -> burst > 1) {
+			}
+			if (readyQueue != NULL && readyQueue -> burst > 0) {
 				readyQueue -> burst--;
 			}
 		}
 
+		if (readyQueue == NULL)
+			printf("Time %d: Idle\n", currentTime);
+
 		currentTime++;
+		currentQuantum++;
 	}
 
 	printf("Finished at time %d\n\n", currentTime);

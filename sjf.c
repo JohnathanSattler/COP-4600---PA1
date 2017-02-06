@@ -25,7 +25,7 @@ void startSjf(process * head, int runFor) {
 
 	printQueue(readyQueue);
 
-	runSjf(head);
+	runSjf();
 
 	return;
 }
@@ -41,12 +41,12 @@ void runSjf() {
 		while (temp != NULL && temp -> arrival == currentTime) {
 			printf("Time %d: %s arrived\n", currentTime, temp -> name);
 
-			readyQueue = enqueue(readyQueue, temp -> name, temp -> arrival, temp -> burst);
+			readyQueue = enqueue(readyQueue, temp -> name, temp -> arrival, temp -> burst, temp -> wait, temp -> turnaround);
 
 			if (temp -> arrival == readyQueue -> arrival && temp -> burst < readyQueue -> burst) {
 				printf("Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
 				while (strcmp(temp -> name, readyQueue -> name) != 0) {
-					readyQueue = enqueue(readyQueue, readyQueue -> name, readyQueue -> arrival, readyQueue -> burst);
+					readyQueue = enqueue(readyQueue, readyQueue -> name, readyQueue -> arrival, readyQueue -> burst, readyQueue -> wait, readyQueue -> turnaround);
 					readyQueue = dequeue(readyQueue);
 				}
 			}
@@ -60,7 +60,7 @@ void runSjf() {
 			if (readyQueue -> burst <= 1) {
 				printf("Time %d: %s finished\n", currentTime, readyQueue -> name);
 
-				endQueue = edit(endQueue, readyQueue, currentTime, readyQueue -> wait, currentTime - readyQueue -> arrival);
+				endQueue = edit(endQueue, readyQueue, readyQueue -> wait, currentTime - readyQueue -> arrival);
 
 				readyQueue = dequeue(readyQueue);
 
@@ -74,7 +74,7 @@ void runSjf() {
 					}
 
 					printf("Time %d: %s selected (burst %d)\n", currentTime, readyQueue -> name, readyQueue -> burst);
-					readyQueue = edit(readyQueue, readyQueue, currentTime, currentTime - readyQueue -> arrival, currentTime - readyQueue -> arrival);
+					readyQueue = edit(readyQueue, readyQueue, currentTime - readyQueue -> arrival, currentTime - readyQueue -> arrival);
 				}
 			} else if (readyQueue -> burst > 1) {
 				readyQueue -> burst--;

@@ -24,7 +24,7 @@ process * selectNext(process * head) {
 	}
 
 	head = removeNode(head, node);
-	processQueue = enqueue(processQueue, node -> name, node -> arrival, node -> burst);
+	processQueue = enqueue(processQueue, node -> name, node -> arrival, node -> burst, node -> wait, node -> turnaround);
 
 	return head;
 }
@@ -39,7 +39,7 @@ process * copyQueue(process * head) {
 		return temp;
 
 	while (temp != NULL) {
-		endQueue = enqueue(endQueue, temp -> name, temp -> arrival, temp -> burst);
+		endQueue = enqueue(endQueue, temp -> name, temp -> arrival, temp -> burst, temp -> wait, temp -> turnaround);
 		temp = temp -> next;
 	}
 
@@ -56,7 +56,13 @@ void printData(process * head) {
 		return;
 
 	while (temp != NULL) {
-		printf("%s wait %d turnaround %d\n", temp -> name, temp -> wait, temp -> turnaround);
+		printf("%s wait %d turnaround %d", temp -> name, temp -> wait, temp -> turnaround);
+
+		if (temp -> turnaround < 0)
+			printf(" (process did not finish)");
+
+		printf("\n");
+
 		temp = temp -> next;
 	}
 

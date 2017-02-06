@@ -3,7 +3,7 @@
 #include <string.h>
 #include "queue.h"
 
-process * enqueue(process * head, char * name, int arrival, int burst) {
+process * enqueue(process * head, char * name, int arrival, int burst, int wait, int turnaround) {
 
 	process * temp, * loop;
 
@@ -13,6 +13,8 @@ process * enqueue(process * head, char * name, int arrival, int burst) {
 	strcpy(temp -> name, name);
 	temp -> arrival = arrival;
 	temp -> burst = burst;
+	temp -> wait = wait;
+	temp -> turnaround = turnaround;
 	temp -> next = NULL;
 
 	if (head == NULL)
@@ -97,7 +99,7 @@ int size(process * head) {
 	return i;
 }
 
-process * edit(process * head, process * node, int end, int wait, int turnaround) {
+process * edit(process * head, process * node, int wait, int turnaround) {
 
 	process * temp;
 
@@ -108,7 +110,6 @@ process * edit(process * head, process * node, int end, int wait, int turnaround
 
 	while (temp != NULL) {
 		if (strcmp(temp -> name, node -> name) == 0) {
-			temp -> end = end;
 			temp -> wait = wait;
 			temp -> turnaround = turnaround;
 		}
