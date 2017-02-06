@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "types.h"
 #include "sjf.h"
 #include "queue.h"
@@ -31,18 +32,25 @@ void startSjf(process * head, int runFor) {
 
 void runSjf() {
 
-	process * temp;
+	process * temp, * node;
+	int i;
 
 	temp = processQueue;
 
 	while (currentTime < runTime) {
-		if (temp != NULL && temp -> arrival == currentTime) {
+		while (temp != NULL && temp -> arrival == currentTime) {
 			printf("Time %d: %s arrived\n", currentTime, temp -> name);
 
-			if (readyQueue == NULL)
-				printf("Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
-
 			readyQueue = enqueue(readyQueue, temp -> name, temp -> arrival, temp -> burst);
+
+			if (temp -> arrival == readyQueue -> arrival && temp -> burst < readyQueue -> burst) {
+				printf("Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
+				while (strcmp(temp -> name, readyQueue -> name) != 0) {
+					readyQueue = enqueue(readyQueue, readyQueue -> name, readyQueue -> arrival, readyQueue -> burst);
+					readyQueue = dequeue(readyQueue);
+				}
+			}
+
 			temp = dequeue(temp);
 		}
 
@@ -56,8 +64,18 @@ void runSjf() {
 
 				readyQueue = dequeue(readyQueue);
 
-				if (readyQueue != NULL)
+				if (readyQueue != NULL) {
+					node = lowestBurst(readyQueue);
+					i = indexOf(readyQueue, node);
+
+					if (i != 0) {
+						readyQueue = removeNode(readyQueue, node);
+						readyQueue = insertAt(readyQueue, node, 0);
+					}
+
 					printf("Time %d: %s selected (burst %d)\n", currentTime, readyQueue -> name, readyQueue -> burst);
+					readyQueue = edit(readyQueue, readyQueue, currentTime, currentTime - readyQueue -> arrival, currentTime - readyQueue -> arrival);
+				}
 			} else if (readyQueue -> burst > 1) {
 				readyQueue -> burst--;
 			}

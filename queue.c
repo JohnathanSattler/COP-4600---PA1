@@ -62,8 +62,7 @@ process * removeNode(process * head, process * node) {
 		return temp;
 
 	do {
-		if (strcmp(temp -> name, node -> name) == 0 &&
-			temp -> arrival == node -> arrival) {
+		if (strcmp(temp -> name, node -> name) == 0) {
 
 			if (last == NULL)
 				return temp -> next;
@@ -108,14 +107,61 @@ process * edit(process * head, process * node, int end, int wait, int turnaround
 		return temp;
 
 	while (temp != NULL) {
-		if (strcmp(temp -> name, node -> name) == 0 &&
-			temp -> arrival == node -> arrival) {
-
+		if (strcmp(temp -> name, node -> name) == 0) {
 			temp -> end = end;
 			temp -> wait = wait;
 			temp -> turnaround = turnaround;
 		}
 
+		temp = temp -> next;
+	}
+
+	return head;
+}
+
+int indexOf(process * head, process * node) {
+
+	process * temp;
+	int i = 0;
+
+	temp = head;
+
+	if (temp == NULL)
+		return -1;
+
+	while (temp != NULL) {
+		if (strcmp(temp -> name, node -> name) == 0)
+			return i;
+
+		i++;
+		temp = temp -> next;
+	}
+
+	return -1;
+}
+
+process * insertAt(process * head, process * node, int index) {
+
+	process * temp, * last;
+	int i = 0;
+
+	temp = head;
+	node -> next = temp;
+
+	if (temp == NULL || index == 0)
+		return node;
+
+	last = temp;
+	temp = temp -> next;
+
+	while (temp != NULL) {
+		if (i == index) {
+			node -> next = temp;
+			last -> next = node;
+		}
+
+		i++;
+		last = temp;
 		temp = temp -> next;
 	}
 

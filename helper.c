@@ -62,3 +62,26 @@ void printData(process * head) {
 
 	return;
 }
+
+process * lowestBurst(process * head) {
+
+	process * temp, * node;
+
+	temp = head;
+	node = NULL;
+
+	if (temp == NULL)
+		return temp;
+
+	while (temp != NULL) {
+		if (node == NULL)
+			node = temp;
+		else
+			if (temp -> burst < node -> burst)
+				node = temp;
+
+		temp = temp -> next;
+	}
+
+	return node;
+}

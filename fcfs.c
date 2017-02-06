@@ -36,7 +36,7 @@ void runFcfs() {
 	temp = processQueue;
 
 	while (currentTime < runTime) {
-		if (temp != NULL && temp -> arrival == currentTime) {
+		while (temp != NULL && temp -> arrival == currentTime) {
 			printf("Time %d: %s arrived\n", currentTime, temp -> name);
 
 			if (readyQueue == NULL)
@@ -56,8 +56,10 @@ void runFcfs() {
 
 				readyQueue = dequeue(readyQueue);
 
-				if (readyQueue != NULL)
+				if (readyQueue != NULL) {
 					printf("Time %d: %s selected (burst %d)\n", currentTime, readyQueue -> name, readyQueue -> burst);
+					readyQueue = edit(readyQueue, readyQueue, currentTime, currentTime - readyQueue -> arrival, currentTime - readyQueue -> arrival);
+				}
 			} else if (readyQueue -> burst > 1) {
 				readyQueue -> burst--;
 			}

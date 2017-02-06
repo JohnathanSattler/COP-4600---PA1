@@ -6,6 +6,7 @@
 process * selectNext(process * head);
 process * copyQueue(process * head);
 void printData(process * head);
+process * lowestBurst(process * head);
 
 process * processQueue;
 process * endQueue;
