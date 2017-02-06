@@ -41,24 +41,28 @@ void runSjf() {
 		while (temp != NULL && temp -> arrival == currentTime) {
 			printf("Time %d: %s arrived\n", currentTime, temp -> name);
 
+			if (readyQueue == NULL)
+				printf("Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
+
 			readyQueue = enqueue(readyQueue, temp -> name, temp -> arrival, temp -> burst, temp -> wait, temp -> turnaround);
 
-			if (temp -> arrival == readyQueue -> arrival && temp -> burst < readyQueue -> burst) {
+			node = lowestBurst(readyQueue);
+			i = indexOf(readyQueue, node);
+
+			if (i != 0) {
+				readyQueue = removeNode(readyQueue, node);
+				readyQueue = insertAt(readyQueue, node, 0);
 				printf("Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
-				while (strcmp(temp -> name, readyQueue -> name) != 0) {
-					readyQueue = enqueue(readyQueue, readyQueue -> name, readyQueue -> arrival, readyQueue -> burst, readyQueue -> wait, readyQueue -> turnaround);
-					readyQueue = dequeue(readyQueue);
-				}
 			}
 
 			temp = dequeue(temp);
 		}
 
 		if (readyQueue != NULL) {
-			if (readyQueue -> burst <= 1) {
+			if (readyQueue -> burst == 0) {
 				printf("Time %d: %s finished\n", currentTime, readyQueue -> name);
 
-				endQueue = edit(endQueue, readyQueue, readyQueue -> wait, currentTime - readyQueue -> arrival);
+				endQueue = edit(endQueue, readyQueue, currentTime - readyQueue -> timeRun - readyQueue -> arrival, currentTime - readyQueue -> arrival);
 
 				readyQueue = dequeue(readyQueue);
 
@@ -76,8 +80,10 @@ void runSjf() {
 				}
 			}
 
-			if (readyQueue != NULL && readyQueue -> burst > 1)
+			if (readyQueue != NULL && readyQueue -> burst > 0) {
 				readyQueue -> burst--;
+				readyQueue -> timeRun++;
+			}
 		}
 
 		if (readyQueue == NULL && currentTime < runTime)

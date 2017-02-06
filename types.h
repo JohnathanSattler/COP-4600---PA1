@@ -13,6 +13,7 @@ typedef struct process {
 	int burst;
 	int wait;
 	int turnaround;
+	int timeRun;
 	struct process * next;
 } process;
 

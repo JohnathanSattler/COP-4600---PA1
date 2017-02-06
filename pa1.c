@@ -159,7 +159,7 @@ void printValues() {
 			break;
 
 		case 2:
-			printf("Shortest Job First\n");
+			printf("Shortest Job First (Pre)\n");
 			break;
 
 		case 3:
