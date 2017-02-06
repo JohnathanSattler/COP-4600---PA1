@@ -36,7 +36,7 @@ void runRr(int quantum) {
 
 	temp = processQueue;
 
-	while (currentTime < runTime) {
+	while (currentTime <= runTime) {
 		while (temp != NULL && temp -> arrival == currentTime) {
 			printf("Time %d: %s arrived\n", currentTime, temp -> name);
 
@@ -78,14 +78,14 @@ void runRr(int quantum) {
 			}
 		}
 
-		if (readyQueue == NULL)
-			printf("Time %d: Idle\n", currentTime);
+		if (readyQueue == NULL && currentTime < runTime)
+			printf("Time %d: IDLE\n", currentTime);
 
 		currentTime++;
 		currentQuantum++;
 	}
 
-	printf("Finished at time %d\n\n", currentTime);
+	printf("Finished at time %d\n\n", currentTime - 1);
 
 	printData(endQueue);
 

@@ -155,7 +155,7 @@ void printValues() {
 	printf("Using ");
 	switch (use) {
 		case 1: // fcfs
-			printf("First-Come, First-Served\n");
+			printf("First Come First Served\n");
 			break;
 
 		case 2:
