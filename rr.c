@@ -1,13 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "types.h"
 #include "rr.h"
-#include "queue.h"
-#include "helper.h"
-
-process * readyQueue;
-int runTime;
-int currentTime;
 
 void startRr(process * head, int runFor, int quantum, FILE * ofp) {
 
@@ -21,8 +12,6 @@ void startRr(process * head, int runFor, int quantum, FILE * ofp) {
 
 	while (temp != NULL)
 		temp = selectNext(temp);
-
-	printQueue(readyQueue);
 
 	runRr(quantum, ofp);
 
@@ -53,8 +42,7 @@ void runRr(int quantum, FILE * ofp) {
 				if (readyQueue -> next != NULL && readyQueue -> next -> arrival + readyQueue -> next -> wait != currentTime)
 					readyQueue -> next -> wait += currentQuantum;
 
-				readyQueue = enqueue(readyQueue, readyQueue -> name, readyQueue -> arrival, readyQueue -> burst, readyQueue -> wait, readyQueue -> turnaround);
-				readyQueue = dequeue(readyQueue);
+				readyQueue = moveToEnd(readyQueue);
 
 				fprintf(ofp, "Time %d: %s selected (burst %d)\n", currentTime, readyQueue -> name, readyQueue -> burst);
 
@@ -67,6 +55,8 @@ void runRr(int quantum, FILE * ofp) {
 				endQueue = edit(endQueue, readyQueue, readyQueue -> wait, currentTime - readyQueue -> arrival);
 
 				readyQueue = dequeue(readyQueue);
+
+				currentQuantum = 0;
 
 				if (readyQueue != NULL) {
 					fprintf(ofp, "Time %d: %s selected (burst %d)\n", currentTime, readyQueue -> name, readyQueue -> burst);

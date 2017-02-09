@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "queue.h"
 
 process * enqueue(process * head, char * name, int arrival, int burst, int wait, int turnaround) {
@@ -165,6 +162,14 @@ process * insertAt(process * head, process * node, int index) {
 		last = temp;
 		temp = temp -> next;
 	}
+
+	return head;
+}
+
+process * moveToEnd(process * head) {
+
+	head = enqueue(head, head -> name, head -> arrival, head -> burst, head -> wait, head -> turnaround);
+	head = dequeue(head);
 
 	return head;
 }

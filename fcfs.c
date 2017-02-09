@@ -1,13 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "types.h"
 #include "fcfs.h"
-#include "queue.h"
-#include "helper.h"
-
-process * readyQueue;
-int runTime;
-int currentTime;
 
 void startFcfs(process * head, int runFor, FILE * ofp) {
 
@@ -21,8 +12,6 @@ void startFcfs(process * head, int runFor, FILE * ofp) {
 
 	while (temp != NULL)
 		temp = selectNext(temp);
-
-	printQueue(readyQueue);
 
 	runFcfs(ofp);
 

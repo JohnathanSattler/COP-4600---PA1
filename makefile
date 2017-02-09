@@ -1,7 +1,7 @@
 pa1: pa1.o fcfs.o sjf.o rr.o queue.o helper.o
 	gcc -o pa1 pa1.o fcfs.o sjf.o rr.o queue.o helper.o
 
-pa1.o: pa1.c types.h fcfs.h queue.h
+pa1.o: pa1.c pa1.h types.h queue.h fcfs.h sjf.h rr.h
 	gcc -c pa1.c
 
 queue.o: queue.c queue.h types.h
@@ -10,13 +10,13 @@ queue.o: queue.c queue.h types.h
 helper.o: helper.c helper.h types.h queue.h
 	gcc -c helper.c
 
-fcfs.o: fcfs.c types.h fcfs.h queue.h helper.h
+fcfs.o: fcfs.c fcfs.h helper.h types.h queue.h
 	gcc -c fcfs.c
 
-sjf.o: sjf.c types.h sjf.h queue.h helper.h
+sjf.o: sjf.c sjf.h helper.h types.h queue.h
 	gcc -c sjf.c
 
-rr.o: rr.c types.h rr.h queue.h helper.h
+rr.o: rr.c rr.h helper.h types.h queue.h
 	gcc -c rr.c
 
 clean:

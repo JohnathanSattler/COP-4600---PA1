@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "helper.h"
-#include "queue.h"
 
 process * selectNext(process * head) {
 
@@ -56,12 +53,10 @@ void printData(process * head, FILE * ofp) {
 		return;
 
 	while (temp != NULL) {
-		fprintf(ofp, "%s wait %d turnaround %d", temp -> name, temp -> wait, temp -> turnaround);
-
 		if (temp -> turnaround < 0)
-			fprintf(ofp, " (process did not finish)");
-
-		fprintf(ofp, "\n");
+			fprintf(ofp, "%s did not finish\n", temp -> name);
+		else
+			fprintf(ofp, "%s wait %d turnaround %d\n", temp -> name, temp -> wait, temp -> turnaround);
 
 		temp = temp -> next;
 	}

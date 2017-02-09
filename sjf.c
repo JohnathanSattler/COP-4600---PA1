@@ -1,14 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "types.h"
 #include "sjf.h"
-#include "queue.h"
-#include "helper.h"
-
-process * readyQueue;
-int runTime;
-int currentTime;
 
 void startSjf(process * head, int runFor, FILE * ofp) {
 
@@ -22,8 +12,6 @@ void startSjf(process * head, int runFor, FILE * ofp) {
 
 	while (temp != NULL)
 		temp = selectNext(temp);
-
-	printQueue(readyQueue);
 
 	runSjf(ofp);
 

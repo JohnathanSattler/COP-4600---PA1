@@ -1,20 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "types.h"
-#include "queue.h"
-#include "fcfs.h"
-#include "sjf.h"
-#include "rr.h"
-
-process * readFile(FILE * ifp, process * head, FILE * ofp);
-int useStrToInt(char * use);
-void printValues(FILE * ofp);
-
-int processcount;
-int runfor;
-int use;
-int quantum;
+#include "pa1.h"
 
 int main() {
    
@@ -120,7 +104,7 @@ process * readFile(FILE * ifp, process * head, FILE * ofp) {
 
 		if (strcmp(strIn, "use") == 0) {
 			fscanf(ifp, "%s", strIn);
-			input[i++] = useStrToInt(strIn);
+			input[i++] = useStrToInt(strIn, ofp);
 		} else {
 			fscanf(ifp, "%d", &input[i++]);
 		}
@@ -137,17 +121,16 @@ process * readFile(FILE * ifp, process * head, FILE * ofp) {
 	return head;
 }
 
-int useStrToInt(char * use) {
+int useStrToInt(char * use, FILE * ofp) {
 
-	if (strcmp(use, "fcfs") == 0) {
+	if (strcmp(use, "fcfs") == 0)
 		return fcfs;
-	} else if (strcmp(use, "sjf") == 0) {
+	else if (strcmp(use, "sjf") == 0)
 		return sjf;
-	} else if (strcmp(use, "rr") == 0) {
+	else if (strcmp(use, "rr") == 0)
 		return rr;
-	}
 
-	printf("Error: Unknown use type\n");
+	fprintf(ofp, "Error: Unknown use type\n");
 	return 0;
 }
 
@@ -156,16 +139,17 @@ void printValues(FILE * ofp) {
 	fprintf(ofp, "%d processes\n", processcount);
 
 	fprintf(ofp, "Using ");
+
 	switch (use) {
 		case 1: // fcfs
 			fprintf(ofp, "First Come First Served\n");
 			break;
 
-		case 2:
+		case 2: // sjf
 			fprintf(ofp, "Shortest Job First (Pre)\n");
 			break;
 
-		case 3:
+		case 3: // rr
 			fprintf(ofp, "Round-Robin\n");
 			fprintf(ofp, "Quantum %d\n", quantum);
 			break;

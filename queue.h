@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "types.h"
 
 process * enqueue(process * head, char * name, int arrival, int burst, int wait, int turnaround);
@@ -8,3 +11,4 @@ int size(process * head);
 process * edit(process * head, process * node, int wait, int turnaround);
 int indexOf(process * head, process * node);
 process * insertAt(process * head, process * node, int index);
+process * moveToEnd(process * head);
