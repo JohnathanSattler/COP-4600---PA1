@@ -5,5 +5,4 @@
 #include "queue.h"
 #include "helper.h"
 
-void startSjf(process * head, int runFor, FILE * ofp);
-void runSjf(FILE * ofp);
+void runSjf(process * head, int runFor, FILE * ofp);

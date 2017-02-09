@@ -1,41 +1,16 @@
 #include "rr.h"
 
-void startRr(process * head, int runFor, int quantum, FILE * ofp) {
-
-	process * temp;
-
-	temp = head;
-	runTime = runFor;
-	currentTime = 0;
-
-	copyQueue(temp);
-
-	while (temp != NULL)
-		temp = selectNext(temp);
-
-	runRr(quantum, ofp);
-
-	return;
-}
-
-void runRr(int quantum, FILE * ofp) {
+void runRr(process * head, int runFor, int quantum, FILE * ofp) {
 
 	process * temp;
 	int currentQuantum = 0;
 
+	init(head, runFor);
+
 	temp = processQueue;
 
 	while (currentTime <= runTime) {
-		while (temp != NULL && temp -> arrival == currentTime) {
-			fprintf(ofp, "Time %d: %s arrived\n", currentTime, temp -> name);
-
-			if (readyQueue == NULL)
-				fprintf(ofp, "Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
-
-			readyQueue = enqueue(readyQueue, temp -> name, temp -> arrival, temp -> burst, temp -> wait + currentQuantum, temp -> turnaround);
-
-			temp = dequeue(temp);
-		}
+		temp = checkForArrivals(temp, ofp, 0);
 
 		if (readyQueue != NULL) {
 			if (currentQuantum == quantum && readyQueue -> burst > 0) {
@@ -68,8 +43,7 @@ void runRr(int quantum, FILE * ofp) {
 			}
 		}
 
-		if (readyQueue == NULL && currentTime < runTime)
-			fprintf(ofp, "Time %d: IDLE\n", currentTime);
+		checkForIdle(ofp);
 
 		currentTime++;
 		currentQuantum++;

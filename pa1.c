@@ -26,15 +26,15 @@ int main() {
 
 	switch (use) {
 		case fcfs:
-			startFcfs(head, runfor, ofp);
+			runFcfs(head, runfor, ofp);
 			break;
 
 		case sjf:
-			startSjf(head, runfor, ofp);
+			runSjf(head, runfor, ofp);
 			break;
 
 		case rr:
-			startRr(head, runfor, quantum, ofp);
+			runRr(head, runfor, quantum, ofp);
 			break;
 
 		default:

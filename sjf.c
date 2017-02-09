@@ -1,50 +1,16 @@
 #include "sjf.h"
 
-void startSjf(process * head, int runFor, FILE * ofp) {
-
-	process * temp;
-
-	temp = head;
-	runTime = runFor;
-	currentTime = 0;
-
-	copyQueue(temp);
-
-	while (temp != NULL)
-		temp = selectNext(temp);
-
-	runSjf(ofp);
-
-	return;
-}
-
-void runSjf(FILE * ofp) {
+void runSjf(process * head, int runFor, FILE * ofp) {
 
 	process * temp, * node;
 	int i;
 
+	init(head, runFor);
+
 	temp = processQueue;
 
 	while (currentTime <= runTime) {
-		while (temp != NULL && temp -> arrival == currentTime) {
-			fprintf(ofp, "Time %d: %s arrived\n", currentTime, temp -> name);
-
-			if (readyQueue == NULL)
-				fprintf(ofp, "Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
-
-			readyQueue = enqueue(readyQueue, temp -> name, temp -> arrival, temp -> burst, temp -> wait, temp -> turnaround);
-
-			node = lowestBurst(readyQueue);
-			i = indexOf(readyQueue, node);
-
-			if (i != 0) {
-				readyQueue = removeNode(readyQueue, node);
-				readyQueue = insertAt(readyQueue, node, 0);
-				fprintf(ofp, "Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
-			}
-
-			temp = dequeue(temp);
-		}
+		temp = checkForArrivals(temp, ofp, 1);
 
 		if (readyQueue != NULL) {
 			if (readyQueue -> burst == 0) {
@@ -74,8 +40,7 @@ void runSjf(FILE * ofp) {
 			}
 		}
 
-		if (readyQueue == NULL && currentTime < runTime)
-			fprintf(ofp, "Time %d: IDLE\n", currentTime);
+		checkForIdle(ofp);
 
 		currentTime++;
 	}
