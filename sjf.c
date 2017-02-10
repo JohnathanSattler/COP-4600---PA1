@@ -17,7 +17,7 @@ void runSjf(process * head, int runFor, FILE * ofp) {
 
 	temp = processQueue;
 
-	while (currentTime <= runTime) {
+	for (currentTime = 0; currentTime <= runTime; currentTime++) {
 		temp = checkForArrivals(temp, ofp, 1);
 
 		if (readyQueue != NULL) {
@@ -49,8 +49,6 @@ void runSjf(process * head, int runFor, FILE * ofp) {
 		}
 
 		checkForIdle(ofp);
-
-		currentTime++;
 	}
 
 	fprintf(ofp, "Finished at time %d\n\n", currentTime - 1);

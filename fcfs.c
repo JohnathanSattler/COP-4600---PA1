@@ -16,7 +16,7 @@ void runFcfs(process * head, int runFor, FILE * ofp) {
 
 	temp = processQueue;
 
-	while (currentTime <= runTime) {
+	for (currentTime = 0; currentTime <= runTime; currentTime++) {
 		temp = checkForArrivals(temp, ofp, 0);
 
 		if (readyQueue != NULL) {
@@ -38,8 +38,6 @@ void runFcfs(process * head, int runFor, FILE * ofp) {
 		}
 
 		checkForIdle(ofp);
-
-		currentTime++;
 	}
 
 	fprintf(ofp, "Finished at time %d\n\n", currentTime - 1);

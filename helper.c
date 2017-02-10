@@ -15,6 +15,7 @@ void init(process * head, int runFor) {
 	temp = head;
 	runTime = runFor;
 	currentTime = 0;
+	currentQuantum = 0;
 
 	copyQueue(temp);
 

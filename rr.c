@@ -11,13 +11,12 @@
 void runRr(process * head, int runFor, int quantum, FILE * ofp) {
 
 	process * temp;
-	currentQuantum = 0;
 
 	init(head, runFor);
 
 	temp = processQueue;
 
-	while (currentTime <= runTime) {
+	for (currentTime = 0; currentTime <= runTime; currentTime++) {
 		temp = checkForArrivals(temp, ofp, 0);
 
 		if (readyQueue != NULL) {
@@ -53,7 +52,6 @@ void runRr(process * head, int runFor, int quantum, FILE * ofp) {
 
 		checkForIdle(ofp);
 
-		currentTime++;
 		currentQuantum++;
 	}
 
