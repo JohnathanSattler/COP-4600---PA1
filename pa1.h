@@ -1,3 +1,11 @@
+/*
+ * COP 4600
+ * Group 1
+ * Johnathan Sattler
+ * Michael Slater
+ * Christian Theriot
+ */
+
 #ifndef _pa1_
 #define _pa1_
 

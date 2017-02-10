@@ -1,3 +1,11 @@
+/*
+ * COP 4600
+ * Group 1
+ * Johnathan Sattler
+ * Michael Slater
+ * Christian Theriot
+ */
+
 #include "sjf.h"
 
 void runSjf(process * head, int runFor, FILE * ofp) {

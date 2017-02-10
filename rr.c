@@ -1,9 +1,17 @@
+/*
+ * COP 4600
+ * Group 1
+ * Johnathan Sattler
+ * Michael Slater
+ * Christian Theriot
+ */
+
 #include "rr.h"
 
 void runRr(process * head, int runFor, int quantum, FILE * ofp) {
 
 	process * temp;
-	int currentQuantum = 0;
+	currentQuantum = 0;
 
 	init(head, runFor);
 
@@ -31,12 +39,12 @@ void runRr(process * head, int runFor, int quantum, FILE * ofp) {
 
 				readyQueue = dequeue(readyQueue);
 
-				currentQuantum = 0;
-
 				if (readyQueue != NULL) {
 					fprintf(ofp, "Time %d: %s selected (burst %d)\n", currentTime, readyQueue -> name, readyQueue -> burst);
 					readyQueue = edit(readyQueue, readyQueue, readyQueue -> wait + currentQuantum, currentTime - readyQueue -> arrival);
 				}
+
+				currentQuantum = 0;
 			}
 			if (readyQueue != NULL && readyQueue -> burst > 0) {
 				readyQueue -> burst--;

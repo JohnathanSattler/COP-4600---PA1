@@ -1,3 +1,11 @@
+/*
+ * COP 4600
+ * Group 1
+ * Johnathan Sattler
+ * Michael Slater
+ * Christian Theriot
+ */
+
 #ifndef _helper_
 #define _helper_
 
@@ -19,5 +27,6 @@ process * endQueue;
 process * readyQueue;
 int runTime;
 int currentTime;
+int currentQuantum;
 
 #endif

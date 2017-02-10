@@ -1,3 +1,11 @@
+/*
+ * COP 4600
+ * Group 1
+ * Johnathan Sattler
+ * Michael Slater
+ * Christian Theriot
+ */
+
 #include "helper.h"
 
 void init(process * head, int runFor) {
@@ -116,7 +124,7 @@ process * checkForArrivals(process * head, FILE * ofp, int sjf) {
 		if (readyQueue == NULL)
 			fprintf(ofp, "Time %d: %s selected (burst %d)\n", currentTime, temp -> name, temp -> burst);
 
-		readyQueue = enqueue(readyQueue, temp -> name, temp -> arrival, temp -> burst, temp -> wait, temp -> turnaround);
+		readyQueue = enqueue(readyQueue, temp -> name, temp -> arrival, temp -> burst, temp -> wait + currentQuantum, temp -> turnaround);
 
 		if (sjf) {
 			node = lowestBurst(readyQueue);

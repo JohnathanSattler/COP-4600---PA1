@@ -1,3 +1,11 @@
+/*
+ * COP 4600
+ * Group 1
+ * Johnathan Sattler
+ * Michael Slater
+ * Christian Theriot
+ */
+
 #include "queue.h"
 
 process * enqueue(process * head, char * name, int arrival, int burst, int wait, int turnaround) {
@@ -27,10 +35,7 @@ process * enqueue(process * head, char * name, int arrival, int burst, int wait,
 
 process * dequeue(process * head) {
 
-	if (head == NULL)
-		return head;
-
-	return head -> next;
+	return head == NULL ? head : head -> next;
 }
 
 void printQueue(process * head) {
@@ -38,9 +43,6 @@ void printQueue(process * head) {
 	process * temp;
 
 	temp = head;
-
-	if (temp == NULL)
-		return;
 
 	while (temp != NULL) {
 		printf("Name: %s, Arrival: %d, Burst: %d\n", temp -> name, temp -> arrival, temp -> burst);
@@ -57,10 +59,7 @@ process * removeNode(process * head, process * node) {
 	temp = head;
 	last = NULL;
 
-	if (temp == NULL)
-		return temp;
-
-	do {
+	while (temp != NULL) {
 		if (strcmp(temp -> name, node -> name) == 0) {
 
 			if (last == NULL)
@@ -73,7 +72,7 @@ process * removeNode(process * head, process * node) {
 
 		last = temp;
 		temp = temp -> next;
-	} while (temp != NULL);
+	}
 
 	return head;
 }
@@ -84,9 +83,6 @@ int size(process * head) {
 	int i = 0;
 
 	temp = head;
-
-	if (temp == NULL)
-		return 0;
 
 	while (temp != NULL) {
 		i++;
@@ -101,9 +97,6 @@ process * edit(process * head, process * node, int wait, int turnaround) {
 	process * temp;
 
 	temp = head;
-
-	if (temp == NULL)
-		return temp;
 
 	while (temp != NULL) {
 		if (strcmp(temp -> name, node -> name) == 0) {
@@ -123,9 +116,6 @@ int indexOf(process * head, process * node) {
 	int i = 0;
 
 	temp = head;
-
-	if (temp == NULL)
-		return -1;
 
 	while (temp != NULL) {
 		if (strcmp(temp -> name, node -> name) == 0)

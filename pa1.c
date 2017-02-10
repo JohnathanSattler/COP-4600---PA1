@@ -1,3 +1,11 @@
+/*
+ * COP 4600
+ * Group 1
+ * Johnathan Sattler
+ * Michael Slater
+ * Christian Theriot
+ */
+
 #include "pa1.h"
 
 int main() {
@@ -53,7 +61,7 @@ process * readFile(FILE * ifp, process * head, FILE * ofp) {
 
 	char * strIn, * nameIn;
 	char charIn;
-	int arrivalIn, burstIn, i = 0;
+	int arrivalIn, burstIn, processes = 0, i = 0;
 
 	int input[4];
 
@@ -93,7 +101,9 @@ process * readFile(FILE * ifp, process * head, FILE * ofp) {
 			fscanf(ifp, "%s", strIn);
 			fscanf(ifp, "%d", &burstIn);
 
-			head = enqueue(head, nameIn, arrivalIn, burstIn, 0, -1);
+			if (processes++ < input[0])
+				head = enqueue(head, nameIn, arrivalIn, burstIn, 0, -1);
+
 			continue;
 		}
 
